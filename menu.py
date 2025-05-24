@@ -28,3 +28,20 @@ def draw_menu(screen, font):
         screen.blit(text_surface, text_rect)
 
     return button_rects
+
+def fade_transition(screen, from_surface, to_surface, duration=1000):
+    """Fade from one surface to another over 'duration' milliseconds."""
+    clock = pygame.time.Clock()
+    start_time = pygame.time.get_ticks()
+    alpha_surface = to_surface.copy()
+    while True:
+        now = pygame.time.get_ticks()
+        elapsed = now - start_time
+        alpha = min(255, int(255 * elapsed / duration))
+        screen.blit(from_surface, (0, 0))
+        alpha_surface.set_alpha(alpha)
+        screen.blit(alpha_surface, (0, 0))
+        pygame.display.flip()
+        if alpha >= 255:
+            break
+        clock.tick(60)
