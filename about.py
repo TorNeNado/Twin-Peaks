@@ -12,7 +12,7 @@ def show_about_page(screen, font, clock, about_image):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 # Кнопка "Назад"
-                back_button_rect = pygame.Rect(50, 500, 200, 50)
+                back_button_rect = pygame.Rect(50, 50, 200, 50)
                 if back_button_rect.collidepoint(mouse_pos):
                     about_running = False
 
@@ -20,7 +20,7 @@ def show_about_page(screen, font, clock, about_image):
         screen.blit(about_image, (0, 0))
 
         # Отрисовка кнопки "Назад"
-        back_button_rect = pygame.Rect(50, 500, 200, 50)
+        back_button_rect = pygame.Rect(50, 50, 200, 50)
         pygame.draw.rect(screen, GRAY, back_button_rect)  # Рамка кнопки
         pygame.draw.rect(screen, BLACK, back_button_rect.inflate(-4, -4))  # Заливка кнопки
         back_text_surface = font.render("Назад", True, WHITE)
