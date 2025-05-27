@@ -39,6 +39,10 @@ class MenuScreen(BaseScreen):
         from menu import draw_menu
         return draw_menu(self.screen, self.font)
 
+    def update(self):
+        self.update_dialog()
+
     def render(self):
         self.screen.blit(self.background, (0, 0))
+        self.update()
         self.draw_menu()

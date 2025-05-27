@@ -4,6 +4,7 @@ from utils.transitions import fade_transition
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
+
 class MapScreen(BaseScreen):
     def __init__(self, app):
         super().__init__(app)
@@ -26,18 +27,21 @@ class MapScreen(BaseScreen):
             for name, rect in self.regions.items():
                 if rect.collidepoint(mouse_pos):
                     print(f"Клик по области: {name}")
+                    if name == "motel":
+                        from screens.motel_screen import MotelRoomScreen
+                        self.app.set_screen(MotelRoomScreen)
             if self.back_button_rect.collidepoint(mouse_pos):
                 background = pygame.image.load("assets/images/startWindow.jpg")
                 background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
                 fade_transition(self.screen, self.map_image, background, duration=800)
-
-                # ЛОКАЛЬНЫЙ ИМПОРТ — разрывает цикл
                 from screens.menu_screen import MenuScreen
                 self.app.set_screen(MenuScreen)
-
                 pygame.mixer.music.load("assets/sound/Menu_Sound.mp3")
                 pygame.mixer.music.set_volume(self.app.music_volume)
                 pygame.mixer.music.play(-1)
+
+    def update(self):
+        self.update_dialog()
 
     def render(self):
         self.screen.blit(self.map_image, (0, 0))
@@ -47,5 +51,5 @@ class MapScreen(BaseScreen):
         text = self.font.render("Назад в меню", True, (0, 0, 0))
         text_rect = text.get_rect(center=self.back_button_rect.center)
         self.screen.blit(text, text_rect)
-
+        self.update()
 

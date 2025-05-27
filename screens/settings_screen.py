@@ -1,14 +1,19 @@
+import os
 import pygame
 from screens.base_screen import BaseScreen
 from utils.transitions import fade_transition
-from settings import SCREEN_WIDTH
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class SettingsScreen(BaseScreen):
-    def __init__(self, app):
-        super().__init__(app)
+    def __init__(self, app):  # ← исправлено
+        super().__init__(app)  # ← исправлено
         self.louder_rect = pygame.Rect(300, 250, 200, 50)
         self.quieter_rect = pygame.Rect(300, 320, 200, 50)
         self.back_rect = pygame.Rect(300, 390, 200, 50)
+
+        # Загрузка фонового изображения
+        self.bg_image = pygame.image.load("assets/images/settings_bg.png")
+        self.bg_image = pygame.transform.scale(self.bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -23,9 +28,8 @@ class SettingsScreen(BaseScreen):
                 from screens.menu_screen import MenuScreen
                 self.app.set_screen(MenuScreen)
 
-
     def render(self):
-        self.screen.fill((0, 0, 0))
+        self.screen.blit(self.bg_image, (0, 0))
         title = self.font.render("Настройки", True, (255, 255, 255))
         self.screen.blit(title, (SCREEN_WIDTH // 2 - title.get_width() // 2, 150))
 
