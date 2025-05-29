@@ -4,10 +4,14 @@ from screens.menu_screen import MenuScreen
 from screens.map_screen import MapScreen
 from screens.settings_screen import SettingsScreen
 from screens.about_screen import AboutScreen
+from utils.inventory import Inventory
 
 class GameApp:
     def __init__(self):
         pygame.init()
+
+        self.inventory = Inventory()
+
         pygame.mixer.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Twin Peaks")

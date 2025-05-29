@@ -12,9 +12,8 @@ import os
 class MenuScreen(BaseScreen):
     def __init__(self, app):
         super().__init__(app)
-
-        path = os.path.join("assets", "images", "startWindow.jpg")
-        self.background = pygame.image.load(path)
+        bg_path = os.path.join("assets", "images", "startWindow.jpg")
+        self.background = pygame.image.load(bg_path)
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
     def handle_event(self, event):
@@ -27,15 +26,18 @@ class MenuScreen(BaseScreen):
                         pygame.mixer.music.set_volume(self.app.music_volume)
                         pygame.mixer.music.play(-1)
                         fade_transition(self.screen)
+                        from screens.map_screen import MapScreen
                         self.app.set_screen(MapScreen)
                     elif option == "Настройки":
+                        from screens.settings_screen import SettingsScreen
                         self.app.set_screen(SettingsScreen)
                     elif option == "Автор":
+                        from screens.about_screen import AboutScreen
                         self.app.set_screen(AboutScreen)
                     elif option == "Выход":
                         self.app.running = False
 
-    def draw_menu(self, preview=False):
+    def draw_menu(self):
         from menu import draw_menu
         return draw_menu(self.screen, self.font)
 
@@ -44,5 +46,5 @@ class MenuScreen(BaseScreen):
 
     def render(self):
         self.screen.blit(self.background, (0, 0))
-        self.update()
         self.draw_menu()
+        

@@ -47,3 +47,6 @@ class SettingsScreen(BaseScreen):
 
         volume_text = self.font.render(f"Громкость: {int(self.app.music_volume * 100)}%", True, (255, 255, 255))
         self.screen.blit(volume_text, (SCREEN_WIDTH // 2 - volume_text.get_width() // 2, 200))
+
+    def update(self):
+        self.update_dialog()

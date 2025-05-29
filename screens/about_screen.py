@@ -24,3 +24,6 @@ class AboutScreen(BaseScreen):
         text_surface = self.font.render("Назад в меню", True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=self.back_button_rect.center)
         self.screen.blit(text_surface, text_rect)
+
+    def update(self):
+        self.update_dialog()
