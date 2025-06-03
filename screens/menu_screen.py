@@ -22,6 +22,7 @@ class MenuScreen(BaseScreen):
             for option, rect in self.draw_menu():
                 if rect.collidepoint(mouse_pos):
                     if option == "Начать игру":
+                        self.app.game_started = True
                         pygame.mixer.music.load("assets/sound/motel-music.mp3")
                         pygame.mixer.music.set_volume(self.app.music_volume)
                         pygame.mixer.music.play(-1)
