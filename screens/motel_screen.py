@@ -55,6 +55,8 @@ class MotelTableScreen(BaseScreen):
         self.image = pygame.transform.scale(self.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.back_rect = pygame.Rect(50, 500, 200, 50)
         self.set_dialog("На столе пока ничего нет... но это может измениться.")
+        self.table_items = self.app.inventory.items.copy()
+        self.app.inventory.items.clear()
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -67,19 +69,35 @@ class MotelTableScreen(BaseScreen):
 
     def render(self):
         self.screen.blit(self.image, (0, 0))
-        # Draw inventory items on the table
-        y = 150
-        if self.app.inventory.items:
-            for item in self.app.inventory.items:
-                item_text = self.font.render(item, True, (0, 0, 0))
-                self.screen.blit(item_text, (100, y))
-                y += 40
-        else:
-            empty_text = self.font.render("Инвентарь пуст", True, (120, 120, 120))
-            self.screen.blit(empty_text, (100, 150))
+
+        mouse_pos = pygame.mouse.get_pos()
+
+        x, y = 100, 150
+        spacing = 80
+        for item in self.table_items:
+            image = self.app.inventory.get_image(item)
+            if image:
+                rect = pygame.Rect(x, y, 64, 64)
+                self.screen.blit(image, (x, y))
+
+                # Подсветка при наведении
+                if rect.collidepoint(mouse_pos):
+                    pygame.draw.rect(self.screen, (255, 255, 0), rect.inflate(4, 4), 3)
+
+                x += spacing
+                if x + 64 > SCREEN_WIDTH - 100:
+                    x = 100
+                    y += spacing
+            else:
+                # Fallback
+                text = self.font.render(item, True, (0, 0, 0))
+                self.screen.blit(text, (x, y))
+                x += spacing
+
         pygame.draw.rect(self.screen, (180, 180, 180), self.back_rect)
         self.screen.blit(self.font.render("Назад", True, (0, 0, 0)), self.back_rect.move(60, 10))
         self.render_dialog()
+
 
 class MotelBoardScreen(BaseScreen):
     def __init__(self, app):

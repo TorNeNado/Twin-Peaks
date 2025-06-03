@@ -15,6 +15,8 @@ class GameApp:
 
         self.inventory = Inventory()
 
+        self.inventory_visible = False
+
         pygame.mixer.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Twin Peaks")
@@ -37,12 +39,20 @@ class GameApp:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                elif event.type == pygame.KEYDOWN and (event.key == pygame.K_p or event.key == pygame.K_ESCAPE):
-                    if self.game_started:  # Only allow pause if game started
-                        self.pause = True
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_i:
+                        self.inventory_visible = not self.inventory_visible
+                    elif event.key == pygame.K_ESCAPE:
+                        if self.inventory_visible:
+                            self.inventory_visible = False
+                        elif self.game_started:
+                            self.pause = not self.pause
+                    elif event.key == pygame.K_p:
+                        if self.game_started:
+                            self.pause = not self.pause
 
                 if self.pause:
-                    # Handle pause menu events
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         mouse_pos = pygame.mouse.get_pos()
                         for option, rect in self.pause_button_rects:
@@ -57,17 +67,51 @@ class GameApp:
                                     self.pause = False
                                 elif option == "Выход":
                                     self.running = False
-                else:
+                elif not self.inventory_visible:
                     self.current_screen.handle_event(event)
 
+            # --- Обновление и рендер ---
             if self.pause:
                 self.screen.fill((30, 30, 30))
                 self.pause_button_rects = draw_pause_menu(self.screen, self.font)
             else:
                 self.current_screen.update()
                 self.current_screen.render()
+                if self.inventory_visible:
+                    self.draw_inventory_overlay()  # <-- Инвентарь поверх сцены
+
             pygame.display.flip()
             self.clock.tick(60)
+
+
+            
+
+
+    def toggle_inventory(self):
+        self.inventory_visible = not self.inventory_visible
+
+    def draw_inventory_overlay(self):
+        overlay_width = 300
+        overlay_height = 400
+        overlay = pygame.Surface((overlay_width, overlay_height))
+        overlay.fill((20, 20, 20))  # Тёмный фон
+        overlay.set_alpha(220)      # Полупрозрачность
+        self.screen.blit(overlay, (SCREEN_WIDTH - overlay_width - 20, 20))
+
+        title = self.font.render("Инвентарь", True, (240, 240, 240))  # Светлый заголовок
+        self.screen.blit(title, (SCREEN_WIDTH - overlay_width, 30))
+
+        y = 70
+        for item in self.inventory.items:
+            item_text = self.font.render(f"- {item}", True, (220, 220, 220))  # Светлый текст
+            self.screen.blit(item_text, (SCREEN_WIDTH - overlay_width, y))
+            y += 30
+
+        for photo in self.inventory.photos:
+            photo_text = self.font.render(f"[Фото] {photo}", True, (180, 200, 255))  # Оттенок синего
+            self.screen.blit(photo_text, (SCREEN_WIDTH - overlay_width, y))
+            y += 30
+
 
 if __name__ == "__main__":
     GameApp().run()
