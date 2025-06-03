@@ -16,6 +16,7 @@ class GameApp:
         self.inventory = Inventory()
 
         self.inventory_visible = False
+        self.ring_taken = False
 
         pygame.mixer.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))

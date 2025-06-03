@@ -24,8 +24,9 @@ class MotelRoomScreen(BaseScreen):
                 from screens.motel_screen import MotelBoardScreen
                 self.app.set_screen(MotelBoardScreen)
             # Only allow picking up the ring if not already in inventory
-            elif self.ring_rect.collidepoint(mouse_pos) and not self.app.inventory.has_item("Кольцо"):
+            elif self.ring_rect.collidepoint(mouse_pos) and not self.app.ring_taken:
                 self.app.inventory.add_item("Кольцо")
+                self.app.ring_taken = True
                 self.set_dialog("Вы взяли кольцо и положили его в инвентарь.")
             elif self.back_rect.collidepoint(mouse_pos):
                 from screens.map_screen import MapScreen
@@ -41,7 +42,7 @@ class MotelRoomScreen(BaseScreen):
         pygame.draw.rect(self.screen, (180, 180, 180), self.board_rect)
         self.screen.blit(self.font.render("Доска", True, (0, 0, 0)), self.board_rect.move(60, 10))
         # Draw the ring button only if not already in inventory
-        if not self.app.inventory.has_item("Кольцо"):
+        if not self.app.ring_taken:
             pygame.draw.rect(self.screen, (180, 180, 180), self.ring_rect)
             self.screen.blit(self.font.render("Кольцо", True, (0, 0, 0)), self.ring_rect.move(60, 10))
         pygame.draw.rect(self.screen, (180, 180, 180), self.back_rect)
@@ -50,6 +51,7 @@ class MotelRoomScreen(BaseScreen):
 
 class MotelTableScreen(BaseScreen):
     def __init__(self, app):
+        
         super().__init__(app)
         self.image = pygame.image.load("assets/images/motel/table.png")
         self.image = pygame.transform.scale(self.image, (SCREEN_WIDTH, SCREEN_HEIGHT))
